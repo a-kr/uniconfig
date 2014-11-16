@@ -56,7 +56,16 @@ This line will perform the following actions:
 		number = 14
 
 2. Overwrite ``config`` from *environment variables*. Environment variables are named in uppercase, like this: ``COUNT=65535 NESTED1_A=sometag``.
-3. Generate *command line flags* for each of ``config``'s public fields, parse the command line and overwrite ``config`` with parsed values. At this point ``--help`` option will be handled. Command line options are named in lowercase, like this: ``--count 65535 --nested1-a sometag``.
+3. Generate *command line flags* for each of ``config``'s public fields, parse the command line and overwrite ``config`` with parsed values. Command line options are named in lowercase, like this: ``--count 65535 --nested1-a sometag``. The ``--help`` option will be handled here, printing something like this:
+
+		-config="": path to configuration file
+		-count=42: number of items
+		-debug=false:
+		-nested1-a="":
+		-nested1-b="":
+		-nested2-zzz=false:
+
+	Note that the help text comes from the structure field tags (e.g. ``Count   int `help:"number of items"` ``).
 
 You can dump the final config in the form of INI file:
 
