@@ -70,3 +70,15 @@ This line will perform the following actions:
 You can dump the final config in the form of INI file:
 
 	fmt.Println(uniconfig.ConfigAsIniFile(config))
+
+Example code
+------------
+
+Clone this repository and try running example application in various ways:
+
+	git clone https://github.com/Babazka/uniconfig
+	cd uniconfig
+
+	NESTED1_A=bee go run example_app/example.go --count=45 --config=example_app/testconfig.ini
+	NESTED1_A=bee go run example_app/example.go --count=45
+	go run example_app/example.go --count=45
