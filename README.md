@@ -13,7 +13,7 @@ Installation
 Usage
 -----
 
-First, import the package::
+First, import the package:
 
 	import "github.com/Babazka/uniconfig"
 
