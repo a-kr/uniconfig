@@ -105,7 +105,7 @@ func LoadFromEnv(configItems []*ConfigItem) {
 func ParseIniFile(inifile io.Reader) map[string]string {
 	scanner := bufio.NewScanner(inifile)
 	result := make(map[string]string)
-	// keys are in stored form KEY or SECTION_KEY, always-uppercase
+	// keys are stored in form of KEY or SECTION_KEY, always-uppercase
 	// (so they match our convention for environment variable names)
 	section := ""
 
