@@ -47,6 +47,23 @@ func (i *ConfigItem) InitFlag() {
 	case reflect.Bool:
 		v := i.Value.Addr().Interface().(*bool)
 		flag.BoolVar(v, name, *v, i.Help)
+	case reflect.Slice:
+		switch i.Value.Type() {
+		case intSliceType:
+			v := i.Value.Addr().Interface().(*[]int)
+			v1 := NewIntSlice(v)
+			flag.Var(v1, name, i.Help)
+		case strSliceType:
+			v := i.Value.Addr().Interface().(*[]string)
+			v1 := NewStrSlice(v)
+			flag.Var(v1, name, i.Help)
+		case floatSliceType:
+			v := i.Value.Addr().Interface().(*[]float64)
+			v1 := NewFloatSlice(v)
+			flag.Var(v1, name, i.Help)
+		default:
+			log.Fatalf("Unexpected type of config entry: %v", i)
+		}
 	default:
 		log.Fatalf("Unexpected type of config entry: %v", i)
 	}
@@ -141,8 +158,8 @@ func GetConfigPathFromCmd(args []string) string {
 	// (and therefore flag.Parse() must be called *after* we've read the config file)
 	reArgValue := regexp.MustCompile(`^[^=]+="?(.+?)"?$`) // optionally quoted value
 	for i, arg := range args {
-		if (arg == "-config" || arg == "--config") && i < len(args) - 1 {
-			return args[i + 1]
+		if (arg == "-config" || arg == "--config") && i < len(args)-1 {
+			return args[i+1]
 		}
 		if strings.HasPrefix(arg, "-config=") || strings.HasPrefix(arg, "--config=") {
 			if m := reArgValue.FindStringSubmatch(arg); m != nil {
