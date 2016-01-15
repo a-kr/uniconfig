@@ -51,6 +51,7 @@ type TestConfig struct {
 	Nested2 struct {
 		Zzz bool
 	}
+	Count2 int64
 }
 
 func TestScanConfig(t *testing.T) {
@@ -60,7 +61,7 @@ func TestScanConfig(t *testing.T) {
 	config.Nested1.B = "baa"
 
 	items := ScanConfig(config)
-	AssertEquals(t, len(items), 5)
+	AssertEquals(t, len(items), 6)
 	AssertEquals(t, items[0].Section, "")
 	AssertEquals(t, items[0].Name, "Debug")
 	AssertEquals(t, items[0].Value.Interface(), false)

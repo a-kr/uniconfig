@@ -44,6 +44,9 @@ func (i *ConfigItem) InitFlag() {
 	case reflect.Int:
 		v := i.Value.Addr().Interface().(*int)
 		flag.IntVar(v, name, *v, i.Help)
+	case reflect.Int64:
+		v := i.Value.Addr().Interface().(*int64)
+		flag.Int64Var(v, name, *v, i.Help)
 	case reflect.Bool:
 		v := i.Value.Addr().Interface().(*bool)
 		flag.BoolVar(v, name, *v, i.Help)
