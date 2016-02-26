@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-var ENV_PREFIX = ""
+var EnvPrefix = ""
 
 type ConfigItem struct {
 	Section string
@@ -24,9 +24,9 @@ type ConfigItem struct {
 func (i *ConfigItem) EnvVarName() string {
 	name := strings.ToUpper(i.Name)
 	if i.Section == "" {
-		return ENV_PREFIX + name
+		return EnvPrefix + name
 	}
-	return ENV_PREFIX + strings.ToUpper(i.Section) + "_" + name
+	return EnvPrefix + strings.ToUpper(i.Section) + "_" + name
 }
 
 func (i *ConfigItem) CmdFlagName() string {
