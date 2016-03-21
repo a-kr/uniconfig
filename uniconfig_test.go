@@ -3,6 +3,7 @@ package uniconfig
 import (
 	"flag"
 	"os"
+	"runtime/debug"
 	"strings"
 	"testing"
 )
@@ -14,6 +15,7 @@ func AssertEquals(t *testing.T, actual, expected interface{}) {
 	case string:
 		if expected, ok := expected.(string); ok {
 			if actual != expected {
+				debug.PrintStack()
 				t.Fatalf("%s != %s", actual, expected)
 			}
 		} else {
@@ -22,20 +24,25 @@ func AssertEquals(t *testing.T, actual, expected interface{}) {
 	case int:
 		if expected, ok := expected.(int); ok {
 			if actual != expected {
+				debug.PrintStack()
 				t.Fatalf("%d != %d", actual, expected)
 			}
 		} else {
+			debug.PrintStack()
 			t.Fatalf("Cannot compare: %v and %v (not int)", actual, expected)
 		}
 	case bool:
 		if expected, ok := expected.(bool); ok {
 			if actual != expected {
+				debug.PrintStack()
 				t.Fatalf("%s != %s", actual, expected)
 			}
 		} else {
+			debug.PrintStack()
 			t.Fatalf("Cannot compare: %v and %v (not bool)", actual, expected)
 		}
 	default:
+		debug.PrintStack()
 		t.Fatalf("Cannot compare: %v and %v", actual, expected)
 	}
 }
@@ -123,9 +130,7 @@ func TestLoadFromIni(t *testing.T) {
 
 		[Nested1]
 		A  = sometag
-		irrelevant = ignored option
 
-		number = 14
 `
 
 	dict := ParseIniFile(strings.NewReader(testIni))
