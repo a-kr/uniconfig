@@ -140,6 +140,28 @@ func TestLoadFromIni(t *testing.T) {
 	AssertEquals(t, config.Nested1.A, "sometag")
 	AssertEquals(t, config.Nested1.B, "baa")
 	AssertEquals(t, config.Nested2.Zzz, false)
+
+	testIni2 := `
+		debug = true
+		count = 65535
+		; this is a comment
+		# also a comment
+
+		[Nested1]
+		A  = sometag
+		unknown_parameter = must panic
+
+`
+	dict2 := ParseIniFile(strings.NewReader(testIni2))
+
+	func() {
+		defer func() {
+			if err := recover(); err != nil {
+			}
+		}()
+		SetFromParsedIniFile(items, dict2)
+		t.Fatal("Test must panic with unknown parameter error")
+	}()
 }
 
 func TestParseCmdline(t *testing.T) {
