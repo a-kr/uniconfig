@@ -6,6 +6,7 @@ import (
 	"runtime/debug"
 	"strings"
 	"testing"
+	"time"
 )
 
 const ()
@@ -41,6 +42,15 @@ func AssertEquals(t *testing.T, actual, expected interface{}) {
 			debug.PrintStack()
 			t.Fatalf("Cannot compare: %v and %v (not bool)", actual, expected)
 		}
+	case time.Duration:
+		if expected, ok := expected.(time.Duration); ok {
+			if actual != expected {
+				debug.PrintStack()
+				t.Fatalf("%s != %s", actual, expected)
+			}
+		} else {
+			t.Fatalf("Cannot compare: %v and %v (not string)", actual, expected)
+		}
 	default:
 		debug.PrintStack()
 		t.Fatalf("Cannot compare: %v and %v", actual, expected)
@@ -59,6 +69,7 @@ type TestConfig struct {
 		Zzz bool
 	}
 	Count2 int64
+	TTL    time.Duration
 }
 
 func TestScanConfig(t *testing.T) {
@@ -66,9 +77,10 @@ func TestScanConfig(t *testing.T) {
 	// some defaults
 	config.Count = 42
 	config.Nested1.B = "baa"
+	config.TTL = time.Second
 
 	items := ScanConfig(config)
-	AssertEquals(t, len(items), 6)
+	AssertEquals(t, len(items), 7)
 	AssertEquals(t, items[0].Section, "")
 	AssertEquals(t, items[0].Name, "Debug")
 	AssertEquals(t, items[0].Value.Interface(), false)
@@ -86,6 +98,12 @@ func TestScanConfig(t *testing.T) {
 	AssertEquals(t, items[4].Section, "Nested2")
 	AssertEquals(t, items[4].Name, "Zzz")
 	AssertEquals(t, items[4].Value.Interface(), false)
+	AssertEquals(t, items[4].Name, "Zzz")
+	AssertEquals(t, items[4].Value.Interface(), false)
+	AssertEquals(t, items[6].Section, "")
+	AssertEquals(t, items[6].Name, "TTL")
+	AssertEquals(t, items[6].Value.Interface(), time.Second)
+	AssertEquals(t, items[6].Help, "")
 }
 
 func TestLoadFromEnv(t *testing.T) {
@@ -96,6 +114,7 @@ func TestLoadFromEnv(t *testing.T) {
 	items := ScanConfig(&config)
 
 	os.Setenv("DEBUG", "true")
+	os.Setenv("TTL", "10s")
 	os.Setenv("NESTED1_B", "buu")
 	os.Setenv("NESTED1_A", "wtf")
 
@@ -106,6 +125,7 @@ func TestLoadFromEnv(t *testing.T) {
 
 	AssertEquals(t, config.Debug, true)
 	AssertEquals(t, config.Count, 42)
+	AssertEquals(t, config.TTL, 10*time.Second)
 	AssertEquals(t, config.Nested1.A, "wtf")
 	AssertEquals(t, config.Nested1.B, "buu")
 	AssertEquals(t, config.Nested2.Zzz, false)
@@ -127,6 +147,7 @@ func TestLoadFromIni(t *testing.T) {
 		count = 65535
 		; this is a comment
 		# also a comment
+		TTL=30m
 
 		[Nested1]
 		A  = sometag
@@ -137,6 +158,7 @@ func TestLoadFromIni(t *testing.T) {
 	SetFromParsedIniFile(items, dict)
 	AssertEquals(t, config.Debug, true)
 	AssertEquals(t, config.Count, 65535)
+	AssertEquals(t, config.TTL, 30*time.Minute)
 	AssertEquals(t, config.Nested1.A, "sometag")
 	AssertEquals(t, config.Nested1.B, "baa")
 	AssertEquals(t, config.Nested2.Zzz, false)

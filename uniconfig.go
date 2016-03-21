@@ -10,6 +10,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"time"
 )
 
 var EnvPrefix = ""
@@ -39,6 +40,12 @@ func (i *ConfigItem) CmdFlagName() string {
 
 func (i *ConfigItem) InitFlag() {
 	name := i.CmdFlagName()
+
+	if i.Value.Type() == reflect.TypeOf(time.Duration(0)) {
+		v := i.Value.Addr().Interface().(*time.Duration)
+		flag.DurationVar(v, name, *v, i.Help)
+		return
+	}
 	switch i.Value.Kind() {
 	case reflect.String:
 		v := i.Value.Addr().Interface().(*string)
@@ -149,7 +156,7 @@ func ParseIniFile(inifile io.Reader) map[string]string {
 				key = section + "_" + key
 			}
 			value := m[2]
-			result[key] = value
+			result[key] = strings.Trim(value, "\"'")
 			continue
 		}
 	}
