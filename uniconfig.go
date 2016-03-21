@@ -181,6 +181,12 @@ func SetFromParsedIniFile(configItems []*ConfigItem, ini map[string]string) {
 		v, ok := ini[k]
 		if ok {
 			flag.Set(item.CmdFlagName(), v)
+			delete(ini, k)
+		}
+	}
+	if len(ini) > 0 {
+		for k, _ := range ini {
+			log.Panicf("Unknown parameter in config file: %s", k)
 		}
 	}
 }
