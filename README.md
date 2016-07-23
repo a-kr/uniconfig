@@ -1,6 +1,6 @@
 uniconfig
 =========
-[![Build Status](https://travis-ci.org/a-kr/uniconfig.svg?branch=master)](https://travis-ci.org/Babazka/uniconfig)
+[![Build Status](https://travis-ci.org/a-kr/uniconfig.svg?branch=master)](https://travis-ci.org/a-kr/uniconfig)
 
 Simple golang configuration library which works with INI files, cmdline flags and environment variables.
 
