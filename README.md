@@ -9,14 +9,14 @@ This package is influenced by https://github.com/rakyll/globalconf, but is diffe
 Installation
 ------------
 
-	go get github.com/Babazka/uniconfig
+	go get github.com/a-kr/uniconfig
 
 Usage
 -----
 
 First, import the package:
 
-	import "github.com/Babazka/uniconfig"
+	import "github.com/a-kr/uniconfig"
 
 Define the structure which will hold your configuration. ``uniconfig`` supports two-level structure nesting.
 
@@ -77,7 +77,7 @@ Example code
 
 Clone this repository and try running example application in various ways:
 
-	git clone https://github.com/Babazka/uniconfig
+	git clone https://github.com/a-kr/uniconfig
 	cd uniconfig
 
 	NESTED1_A=bee go run example_app/example.go --count=45 --config=example_app/testconfig.ini
